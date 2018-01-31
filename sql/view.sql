@@ -1,0 +1,22 @@
+CREATE VIEW categories AS 
+   SELECT *
+   FROM CATEGORY;
+
+CREATE VIEW newsdatas AS 
+   SELECT AUTHORID,NEWSID,VISIBLE,NEWSDATE,NAME,SURNAME,TITLE,DESCRIPTION FROM NEWS n,AUTHOR_NEWS an,AUTHOR a,PERSON p WHERE  n.ID = an.NEWSID and an.AUTHORID=a.PERSONID and a.PERSONID =p.ID ORDER BY NEWSDATE desc;
+   
+CREATE VIEW authorlist AS
+	Select ID,NAME,SURNAME,SIGNATURE,PP,BIRTHDATE,EMAIL from author A,person P where a.PERSONID = p.ID
+	
+CREATE VIEW userlist AS
+	Select ID,NAME,SURNAME,EMAIL,BIRTHDATE,USERNAME,GENDER from USER_ A,person P where a.PERSONID = p.ID
+		
+	
+CREATE VIEW max_numb_news_auth AS
+	select * from authorlist where ID IN (SELECT AUTHORID FROM (SELECT COUNT(*) C,AUTHORID FROM (SELECT * FROM author a,person p,author_news an where an.AUTHORID = a.PERSONID and an.AUTHORID = p.ID) GROUP BY AUTHORID)
+	WHERE C=(SELECT MAX(C) FROM (SELECT COUNT(*) C,AUTHORID FROM (SELECT * FROM author a,person p,author_news an where an.AUTHORID = a.PERSONID and an.AUTHORID = p.ID) GROUP BY AUTHORID)))
+	
+CREATE VIEW min_numb_news_auth AS
+	select * from authorlist where ID IN (SELECT AUTHORID FROM (SELECT COUNT(*) C,AUTHORID FROM (SELECT * FROM author a,person p,author_news an where an.AUTHORID = a.PERSONID and an.AUTHORID = p.ID) GROUP BY AUTHORID)
+	WHERE C=(SELECT MIN(C) FROM (SELECT COUNT(*) C,AUTHORID FROM (SELECT * FROM author a,person p,author_news an where an.AUTHORID = a.PERSONID and an.AUTHORID = p.ID) GROUP BY AUTHORID)))
+
